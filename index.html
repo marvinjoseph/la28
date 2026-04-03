@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LA 2028 Olympics Schedule</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-left">
+          <span class="wordmark">LA28</span>
+          <span class="header-sep"></span>
+          <nav class="nav-tabs" role="tablist" aria-label="Main navigation">
+            <a href="#browse" class="nav-tab active" role="tab" aria-selected="true" data-view="browse">Browse</a>
+            <a href="#planner" class="nav-tab" role="tab" aria-selected="false" data-view="planner">Planner</a>
+          </nav>
+        </div>
+        <div class="header-right">
+          <span class="header-meta">July 14 &ndash; 30, 2028</span>
+          <span class="header-meta">&middot;</span>
+          <span class="header-meta">Los Angeles</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== BROWSE VIEW ==================== -->
+    <main class="main browse-main" id="view-browse">
+      <section class="browse-header">
+        <h1>Competition <em>Schedule</em></h1>
+        <p>All sessions across the LA 2028 Olympic Games. Filter, search, and explore.</p>
+      </section>
+
+      <!-- Filter Bar -->
+      <section class="filter-bar" aria-label="Filters">
+        <div class="filter-bar-top">
+          <div class="filter-controls">
+            <!-- Search -->
+            <div class="filter-group filter-search">
+              <label for="browse-search" class="sr-only">Search events</label>
+              <input type="text" id="browse-search" placeholder="Search sport, event, venue..." autocomplete="off">
+            </div>
+
+            <!-- Sport Filter -->
+            <div class="filter-group">
+              <button class="filter-trigger" id="filter-sport-trigger" aria-expanded="false" aria-controls="filter-sport-dropdown">
+                <span class="filter-trigger-label">Sport</span>
+                <span class="filter-trigger-count" id="filter-sport-count"></span>
+                <svg class="filter-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <div class="filter-dropdown" id="filter-sport-dropdown" role="listbox" aria-label="Select sports"></div>
+            </div>
+
+            <!-- Stage Filter -->
+            <div class="filter-group">
+              <button class="filter-trigger" id="filter-stage-trigger" aria-expanded="false" aria-controls="filter-stage-dropdown">
+                <span class="filter-trigger-label">Stage</span>
+                <span class="filter-trigger-count" id="filter-stage-count"></span>
+                <svg class="filter-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <div class="filter-dropdown" id="filter-stage-dropdown" role="listbox" aria-label="Select stages"></div>
+            </div>
+
+            <!-- Venue Filter -->
+            <div class="filter-group">
+              <button class="filter-trigger" id="filter-venue-trigger" aria-expanded="false" aria-controls="filter-venue-dropdown">
+                <span class="filter-trigger-label">Venue</span>
+                <span class="filter-trigger-count" id="filter-venue-count"></span>
+                <svg class="filter-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <div class="filter-dropdown" id="filter-venue-dropdown" role="listbox" aria-label="Select venues"></div>
+            </div>
+
+            <!-- Date Range -->
+            <div class="filter-group filter-date-range">
+              <label for="browse-date-start" class="sr-only">Start date</label>
+              <input type="date" id="browse-date-start" min="2028-07-14" max="2028-07-30" aria-label="Start date">
+              <span class="date-sep">&ndash;</span>
+              <label for="browse-date-end" class="sr-only">End date</label>
+              <input type="date" id="browse-date-end" min="2028-07-14" max="2028-07-30" aria-label="End date">
+            </div>
+          </div>
+
+          <div class="filter-meta">
+            <div class="filter-mode-toggle">
+              <button class="mode-btn active" id="mode-and" aria-pressed="true">Match all (AND)</button>
+              <button class="mode-btn" id="mode-or" aria-pressed="false">Match any (OR)</button>
+            </div>
+            <div class="filter-status">
+              <span class="result-count" id="result-count"></span>
+              <button class="clear-filters-btn" id="clear-filters" style="display:none;">Clear all</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Table -->
+      <section class="browse-results" aria-label="Schedule results">
+        <div class="browse-table-wrap">
+          <table class="browse-table" id="browse-table">
+            <thead>
+              <tr>
+                <th class="col-date" scope="col">
+                  <button class="sort-btn active" data-sort="date" aria-label="Sort by date">Date <span class="sort-arrow">&darr;</span></button>
+                </th>
+                <th class="col-time" scope="col">
+                  <button class="sort-btn" data-sort="time" aria-label="Sort by time">Time</button>
+                </th>
+                <th class="col-sport" scope="col">
+                  <button class="sort-btn" data-sort="sport" aria-label="Sort by sport">Sport</button>
+                </th>
+                <th class="col-desc" scope="col">Event</th>
+                <th class="col-stage" scope="col">
+                  <button class="sort-btn" data-sort="stage" aria-label="Sort by stage">Stage</button>
+                </th>
+                <th class="col-venue" scope="col">
+                  <button class="sort-btn" data-sort="venue" aria-label="Sort by venue">Venue</button>
+                </th>
+                <th class="col-zone" scope="col">Zone</th>
+              </tr>
+            </thead>
+            <tbody id="browse-tbody"></tbody>
+          </table>
+        </div>
+        <div class="browse-empty" id="browse-empty" style="display:none;">
+          <h3>No sessions match your filters</h3>
+          <p>Try adjusting your filters or clearing them to see all events.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==================== PLANNER VIEW ==================== -->
+    <main class="main planner-main" id="view-planner" style="display:none;">
+      <section class="intro">
+        <h1>Build your <em>perfect</em> Olympic&nbsp;weekend</h1>
+        <p>Pick up to 3 sports, choose men's or women's events and the stage you care about, and we'll find every 3&ndash;5 day window where they all fit.</p>
+      </section>
+
+      <!-- Step 1 -->
+      <section class="step" id="step-pick">
+        <div class="step-label"><span class="step-num">1</span> Choose your sports</div>
+
+        <div class="search-wrap">
+          <label for="sport-search" class="sr-only">Search sports</label>
+          <input type="text" id="sport-search" placeholder="Search sports..." autocomplete="off">
+        </div>
+
+        <div id="selected-sports" class="selected-sports"></div>
+        <div id="sports-grid" class="sports-grid"></div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="step hidden" id="step-stages">
+        <div class="step-label"><span class="step-num">2</span> Gender &amp; stage</div>
+        <div id="stage-selectors" class="stage-selectors"></div>
+        <button id="find-schedules-btn" class="btn-find" disabled>Find schedules</button>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="step hidden" id="step-results">
+        <div class="step-label"><span class="step-num">3</span> Your options</div>
+        <div id="results-area" class="results-area"></div>
+        <button id="start-over-btn" class="btn-reset">Start over</button>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Official LA 2028 Olympic Games Competition Schedule v3.0 &middot; All times Pacific
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="browse.js"></script>
+  <script>initNav();</script>
+</body>
+</html>
