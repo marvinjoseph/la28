@@ -136,36 +136,69 @@
     <!-- ==================== PLANNER VIEW ==================== -->
     <main class="main planner-main" id="view-planner" style="display:none;">
       <section class="intro">
-        <h1>Build your <em>perfect</em> Olympic&nbsp;weekend</h1>
-        <p>Pick up to 3 sports, choose men's or women's events and the stage you care about, and we'll find every 3&ndash;5 day window where they all fit.</p>
+        <h1>Plan your <em>Olympic</em> trip</h1>
+        <p>Choose the sports you want to see, filter by gender and stage, set your travel dates, and see everything laid out on a day-by-day timeline.</p>
       </section>
 
-      <!-- Step 1 -->
-      <section class="step" id="step-pick">
-        <div class="step-label"><span class="step-num">1</span> Choose your sports</div>
+      <!-- Planner Filters -->
+      <section class="planner-filters">
+        <div class="step-label">Configure your schedule</div>
 
-        <div class="search-wrap">
-          <label for="sport-search" class="sr-only">Search sports</label>
-          <input type="text" id="sport-search" placeholder="Search sports..." autocomplete="off">
+        <!-- Sport Selection -->
+        <div class="planner-section">
+          <div class="planner-section-label">Sports</div>
+          <div class="planner-sport-search-wrap">
+            <label for="planner-sport-search" class="sr-only">Search sports</label>
+            <input type="text" id="planner-sport-search" placeholder="Search sports..." autocomplete="off">
+          </div>
+          <div id="planner-selected-sports" class="selected-sports"></div>
+          <div id="planner-sports-grid" class="sports-grid"></div>
         </div>
 
-        <div id="selected-sports" class="selected-sports"></div>
-        <div id="sports-grid" class="sports-grid"></div>
+        <!-- Gender / Stage / Dates row -->
+        <div class="planner-options">
+          <div class="planner-option-group">
+            <div class="planner-section-label">Gender</div>
+            <div class="planner-toggle-row" id="planner-gender-toggle">
+              <button class="gender-btn active" data-value="all">All</button>
+              <button class="gender-btn mens" data-value="mens">Men's</button>
+              <button class="gender-btn womens" data-value="womens">Women's</button>
+            </div>
+          </div>
+
+          <div class="planner-option-group">
+            <div class="planner-section-label">Stages</div>
+            <div class="planner-toggle-row" id="planner-stage-toggle">
+              <button class="stage-btn active" data-value="all">All</button>
+              <button class="stage-btn" data-value="Preliminary">Preliminary</button>
+              <button class="stage-btn" data-value="Quarterfinal">Quarterfinal</button>
+              <button class="stage-btn" data-value="Semifinal">Semifinal</button>
+              <button class="stage-btn" data-value="Final">Final</button>
+            </div>
+          </div>
+
+          <div class="planner-option-group">
+            <div class="planner-section-label">Travel dates</div>
+            <div class="planner-date-range">
+              <label for="planner-date-start" class="sr-only">Start date</label>
+              <input type="date" id="planner-date-start" aria-label="Start date">
+              <span class="date-sep">&ndash;</span>
+              <label for="planner-date-end" class="sr-only">End date</label>
+              <input type="date" id="planner-date-end" aria-label="End date">
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="planner-summary" id="planner-summary"></div>
       </section>
 
-      <!-- Step 2 -->
-      <section class="step hidden" id="step-stages">
-        <div class="step-label"><span class="step-num">2</span> Gender &amp; stage</div>
-        <div id="stage-selectors" class="stage-selectors"></div>
-        <button id="find-schedules-btn" class="btn-find" disabled>Find schedules</button>
+      <!-- Timeline Results -->
+      <section class="planner-results" id="planner-results">
+        <div id="planner-timeline" class="planner-timeline"></div>
       </section>
 
-      <!-- Step 3 -->
-      <section class="step hidden" id="step-results">
-        <div class="step-label"><span class="step-num">3</span> Your options</div>
-        <div id="results-area" class="results-area"></div>
-        <button id="start-over-btn" class="btn-reset">Start over</button>
-      </section>
+      <button id="planner-reset-btn" class="btn-reset" style="display:none;">Clear all selections</button>
     </main>
 
     <footer class="footer">

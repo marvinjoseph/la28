@@ -1,4 +1,4 @@
-// Sport Emoji Map
+// Shared: Sport Emoji Map
 const SPORT_EMOJI = {
   "3x3 Basketball": "\u{1F3C0}", "Archery": "\u{1F3F9}", "Artistic Gymnastics": "\u{1F938}",
   "Artistic Swimming": "\u{1F3CA}", "Athletics (Track & Field)": "\u{1F3C3}",
@@ -24,16 +24,11 @@ const SPORT_EMOJI = {
   "Water Polo": "\u{1F93D}", "Weightlifting": "\u{1F3CB}", "Wrestling": "\u{1F93C}",
 };
 
-// State
-let selectedSports = [];
-let stageSelections = {};
-let genderSelections = {};
-
-// Gender helpers
+// Shared: Gender helpers
 function detectGender(desc) {
-  const lower = desc.toLowerCase();
-  const hasMens = lower.includes("men's") || lower.includes("men\u2019s") || lower.includes("male");
-  const hasWomens = lower.includes("women's") || lower.includes("women\u2019s") || lower.includes("female");
+  var lower = desc.toLowerCase();
+  var hasMens = lower.includes("men's") || lower.includes("men\u2019s");
+  var hasWomens = lower.includes("women's") || lower.includes("women\u2019s");
   if (hasMens && hasWomens) return "mixed";
   if (hasWomens) return "womens";
   if (hasMens) return "mens";
@@ -42,418 +37,336 @@ function detectGender(desc) {
 
 function sessionMatchesGender(session, genderFilter) {
   if (genderFilter === "all") return true;
-  const gender = detectGender(session.desc);
+  var gender = detectGender(session.desc);
   if (gender === "mixed") return true;
   return gender === genderFilter;
 }
 
-function getAvailableGenders(sessions) {
-  const genders = new Set();
-  for (const s of sessions) {
-    const g = detectGender(s.desc);
-    genders.add(g);
-  }
-  const result = [];
-  if (genders.has("mens") || genders.has("mixed")) result.push("mens");
-  if (genders.has("womens") || genders.has("mixed")) result.push("womens");
-  return result.length >= 2 ? result : [];
-}
-
-// DOM refs (lazy — resolved when planner initializes)
-let searchInput, selectedSportsEl, sportsGridEl, stepStages, stageSelectorsEl, findBtn, stepResults, resultsArea, startOverBtn;
-let plannerInitialized = false;
-
-function initPlanner() {
-  if (plannerInitialized) return;
-  plannerInitialized = true;
-
-  searchInput = document.getElementById("sport-search");
-  selectedSportsEl = document.getElementById("selected-sports");
-  sportsGridEl = document.getElementById("sports-grid");
-  stepStages = document.getElementById("step-stages");
-  stageSelectorsEl = document.getElementById("stage-selectors");
-  findBtn = document.getElementById("find-schedules-btn");
-  stepResults = document.getElementById("step-results");
-  resultsArea = document.getElementById("results-area");
-  startOverBtn = document.getElementById("start-over-btn");
-
-  renderSportsGrid();
-  searchInput.addEventListener("input", handleSearch);
-  findBtn.addEventListener("click", findSchedules);
-  startOverBtn.addEventListener("click", startOver);
-}
-
-// Render Sports Grid
-function renderSportsGrid(filter = "") {
-  const lowerFilter = filter.toLowerCase();
-  const html = SPORTS
-    .filter(s => !filter || s.toLowerCase().includes(lowerFilter))
-    .map(sport => {
-      const sessions = SCHEDULE_DATA.filter(d => d.sport === sport);
-      const isSelected = selectedSports.includes(sport);
-      const isDisabled = !isSelected && selectedSports.length >= 3;
-      const emoji = SPORT_EMOJI[sport] || "\u{1F3C5}";
-      return `
-        <div class="sport-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}"
-             role="button" tabindex="${isDisabled ? -1 : 0}"
-             aria-pressed="${isSelected}"
-             data-sport="${sport}"
-             onclick="toggleSport('${sport.replace(/'/g, "\\'")}')"
-             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSport('${sport.replace(/'/g, "\\'")}');}">
-          <span class="sport-emoji" aria-hidden="true">${emoji}</span>
-          <div>
-            <div class="sport-name">${sport}</div>
-            <div class="sport-sessions">${sessions.length} session${sessions.length !== 1 ? "s" : ""}</div>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-  sportsGridEl.innerHTML = html || '<p style="color: var(--text-3); padding: 16px;">No sports match your search.</p>';
-}
-
-// Toggle Sport Selection
-function toggleSport(sport) {
-  const idx = selectedSports.indexOf(sport);
-  if (idx >= 0) {
-    selectedSports.splice(idx, 1);
-    delete stageSelections[sport];
-    delete genderSelections[sport];
-  } else if (selectedSports.length < 3) {
-    selectedSports.push(sport);
-  }
-  update();
-}
-
-// Update UI
-function update() {
-  renderSportsGrid(searchInput.value);
-  renderSelectedPills();
-  renderStageSelectors();
-  updateFindButton();
-
-  stepStages.classList.toggle("hidden", selectedSports.length === 0);
-  stepResults.classList.add("hidden");
-}
-
-function renderSelectedPills() {
-  selectedSportsEl.innerHTML = selectedSports
-    .map(sport => {
-      const emoji = SPORT_EMOJI[sport] || "\u{1F3C5}";
-      return `
-        <span class="sport-pill">
-          ${emoji} ${sport}
-          <button class="remove-pill" aria-label="Remove ${sport}" onclick="toggleSport('${sport.replace(/'/g, "\\'")}')">&times;</button>
-        </span>
-      `;
-    })
-    .join("");
-}
-
-function renderStageSelectors() {
-  stageSelectorsEl.innerHTML = selectedSports
-    .map(sport => {
-      const sessions = SCHEDULE_DATA.filter(d => d.sport === sport);
-      const genderFilter = genderSelections[sport] || "all";
-      const filteredSessions = sessions.filter(s => sessionMatchesGender(s, genderFilter));
-      const types = [...new Set(filteredSessions.map(s => s.type))].sort((a, b) => {
-        const order = { Preliminary: 0, Quarterfinal: 1, Semifinal: 2, Final: 3 };
-        return (order[a] ?? 99) - (order[b] ?? 99);
-      });
-      const emoji = SPORT_EMOJI[sport] || "\u{1F3C5}";
-      const selectedStage = stageSelections[sport];
-      const availableGenders = getAvailableGenders(sessions);
-
-      if (selectedStage && !types.includes(selectedStage)) {
-        delete stageSelections[sport];
-      }
-
-      const genderToggle = availableGenders.length >= 2 ? `
-        <div class="gender-toggle">
-          <button class="gender-btn ${genderFilter === "all" ? "active" : ""}"
-                  onclick="selectGender('${sport.replace(/'/g, "\\'")}', 'all')">All</button>
-          <button class="gender-btn mens ${genderFilter === "mens" ? "active" : ""}"
-                  onclick="selectGender('${sport.replace(/'/g, "\\'")}', 'mens')">Men's</button>
-          <button class="gender-btn womens ${genderFilter === "womens" ? "active" : ""}"
-                  onclick="selectGender('${sport.replace(/'/g, "\\'")}', 'womens')">Women's</button>
-        </div>
-      ` : "";
-
-      return `
-        <div class="stage-card">
-          <div class="stage-card-header">
-            <span class="sport-emoji">${emoji}</span>
-            <h3>${sport}</h3>
-          </div>
-          ${genderToggle}
-          <div class="stage-label">Stage</div>
-          <div class="stage-options">
-            ${types.map(t => {
-              const count = filteredSessions.filter(s => s.type === t).length;
-              const isActive = stageSelections[sport] === t;
-              return `<button class="stage-btn ${isActive ? "active" : ""}"
-                        onclick="selectStage('${sport.replace(/'/g, "\\'")}', '${t}')">
-                        ${t}<span class="count">(${count})</span>
-                      </button>`;
-            }).join("")}
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function selectGender(sport, gender) {
-  genderSelections[sport] = gender;
-  const sessions = SCHEDULE_DATA.filter(d => d.sport === sport);
-  const filtered = sessions.filter(s => sessionMatchesGender(s, gender));
-  const types = [...new Set(filtered.map(s => s.type))];
-  if (stageSelections[sport] && !types.includes(stageSelections[sport])) {
-    delete stageSelections[sport];
-  }
-  renderStageSelectors();
-  updateFindButton();
-}
-
-function selectStage(sport, type) {
-  stageSelections[sport] = type;
-  renderStageSelectors();
-  updateFindButton();
-}
-
-function updateFindButton() {
-  const allSelected = selectedSports.length >= 1 &&
-    selectedSports.every(s => stageSelections[s]);
-  findBtn.disabled = !allSelected;
-}
-
-// Handle Search
-function handleSearch() {
-  renderSportsGrid(searchInput.value);
-}
-
-// Find Schedules
-function findSchedules() {
-  const sportSessions = selectedSports.map(sport => {
-    const genderFilter = genderSelections[sport] || "all";
-    return {
-      sport,
-      stage: stageSelections[sport],
-      gender: genderFilter,
-      sessions: SCHEDULE_DATA.filter(d =>
-        d.sport === sport &&
-        d.type === stageSelections[sport] &&
-        sessionMatchesGender(d, genderFilter)
-      )
-    };
-  });
-
-  const combos = findValidCombinations(sportSessions);
-
-  renderResults(combos, sportSessions);
-  stepResults.classList.remove("hidden");
-  stepResults.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function findValidCombinations(sportSessions) {
-  if (sportSessions.length === 0) return [];
-
-  const sessionArrays = sportSessions.map(s => s.sessions);
-  const allCombos = cartesian(sessionArrays);
-  const validCombos = [];
-
-  for (const combo of allCombos) {
-    const dates = combo.map(s => new Date(s.date + "T00:00:00"));
-    const minDate = new Date(Math.min(...dates));
-    const maxDate = new Date(Math.max(...dates));
-    const daySpan = Math.round((maxDate - minDate) / (1000 * 60 * 60 * 24)) + 1;
-
-    if (daySpan > 5) continue;
-    if (hasTimeConflict(combo)) continue;
-
-    validCombos.push({
-      sessions: combo,
-      daySpan,
-      minDate: combo.map(s => s.date).sort()[0],
-      maxDate: combo.map(s => s.date).sort().pop()
-    });
-  }
-
-  validCombos.sort((a, b) => a.daySpan - b.daySpan || a.minDate.localeCompare(b.minDate));
-
-  const seen = new Set();
-  const deduped = [];
-  for (const c of validCombos) {
-    const key = c.sessions.map(s => s.code).sort().join(",");
-    if (!seen.has(key)) {
-      seen.add(key);
-      deduped.push(c);
-    }
-  }
-
-  return deduped.slice(0, 20);
-}
-
-function cartesian(arrays) {
-  if (arrays.length === 0) return [[]];
-  if (arrays.length === 1) return arrays[0].map(item => [item]);
-
-  const results = [];
-  const rest = cartesian(arrays.slice(1));
-
-  for (const item of arrays[0]) {
-    for (const r of rest) {
-      results.push([item, ...r]);
-    }
-  }
-
-  if (results.length > 50000) return results.slice(0, 50000);
-  return results;
-}
-
-function hasTimeConflict(sessions) {
-  const byDate = {};
-  for (const s of sessions) {
-    if (!byDate[s.date]) byDate[s.date] = [];
-    byDate[s.date].push(s);
-  }
-
-  for (const date in byDate) {
-    const day = byDate[date];
-    for (let i = 0; i < day.length; i++) {
-      for (let j = i + 1; j < day.length; j++) {
-        if (timesOverlap(day[i], day[j])) return true;
-      }
-    }
-  }
-  return false;
-}
-
-function timesOverlap(a, b) {
-  const aStart = timeToMinutes(a.start);
-  const aEnd = timeToMinutes(a.end);
-  const bStart = timeToMinutes(b.start);
-  const bEnd = timeToMinutes(b.end);
-  return aStart < bEnd && bStart < aEnd;
-}
-
-function timeToMinutes(t) {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
-
-// Render Results
-function renderResults(combos, sportSessions) {
-  if (combos.length === 0) {
-    resultsArea.innerHTML = `
-      <div class="no-results">
-        <h3>No compatible schedules found</h3>
-        <p>Try different stages or different sports. Some combinations don't fit within a 3-5 day window, or have time conflicts.</p>
-      </div>
-    `;
-    return;
-  }
-
-  resultsArea.innerHTML = combos.map((combo, idx) => {
-    const byDate = {};
-    for (const s of combo.sessions) {
-      if (!byDate[s.date]) byDate[s.date] = [];
-      byDate[s.date].push(s);
-    }
-
-    const sortedDates = Object.keys(byDate).sort();
-
-    const startStr = formatDate(sortedDates[0]);
-    const endStr = formatDate(sortedDates[sortedDates.length - 1]);
-    const rangeLabel = sortedDates.length === 1 ? startStr : `${startStr} \u2013 ${endStr}`;
-
-    return `
-      <div class="schedule-option">
-        <div class="schedule-option-header">
-          <h3>Option ${idx + 1}</h3>
-          <div>
-            <span class="schedule-date-range">${rangeLabel}</span>
-            <span class="schedule-days-label">${combo.daySpan} day${combo.daySpan > 1 ? "s" : ""}</span>
-          </div>
-        </div>
-        <div class="schedule-timeline">
-          ${sortedDates.map(date => {
-            const events = byDate[date].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
-            return `
-              <div class="timeline-day">
-                <div class="timeline-day-label">${formatDayLabel(date)}</div>
-                <div class="timeline-events">
-                  ${events.map(ev => renderEvent(ev)).join("")}
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderEvent(ev) {
-  const emoji = SPORT_EMOJI[ev.sport] || "\u{1F3C5}";
-  const typeClass = ev.type.toLowerCase();
-  return `
-    <div class="timeline-event type-${typeClass}">
-      <div class="event-time">
-        <span class="start">${formatTime(ev.start)}</span>
-        <span class="dash">\u2013</span>
-        <span class="end">${formatTime(ev.end)}</span>
-      </div>
-      <div class="event-details">
-        <div class="event-sport">${emoji} ${ev.sport}</div>
-        <div class="event-desc">${ev.desc}</div>
-        <div class="event-venue">${ev.venue} \u00B7 ${ev.zone}</div>
-      </div>
-      <span class="event-badge badge-${typeClass}">${ev.type}</span>
-    </div>
-  `;
+// Shared: date helpers
+function computeDateRange() {
+  var dates = SCHEDULE_DATA.map(function (s) { return s.date; });
+  return { min: dates.sort()[0], max: dates.sort().pop() };
 }
 
 function formatDate(dateStr) {
-  const d = new Date(dateStr + "T12:00:00");
+  var d = new Date(dateStr + "T12:00:00");
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function formatDayLabel(dateStr) {
-  const d = new Date(dateStr + "T12:00:00");
+  var d = new Date(dateStr + "T12:00:00");
   return d.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
 }
 
 function formatTime(t) {
-  const [h, m] = t.split(":");
-  const hour = parseInt(h);
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const h12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  return `${h12}:${m} ${ampm}`;
+  var parts = t.split(":");
+  var hour = parseInt(parts[0]);
+  var m = parts[1];
+  var ampm = hour >= 12 ? "PM" : "AM";
+  var h12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  return h12 + ":" + m + " " + ampm;
 }
 
-// Start Over
-function startOver() {
-  selectedSports = [];
-  stageSelections = {};
-  genderSelections = {};
-  searchInput.value = "";
-  update();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+function timeToMinutes(t) {
+  var parts = t.split(":").map(Number);
+  return parts[0] * 60 + parts[1];
 }
 
-// ===== Navigation / View Switching =====
+// =============================================
+// PLANNER VIEW
+// =============================================
+(function () {
+  var initialized = false;
+  var els = {};
+
+  // State
+  var selectedSports = [];
+  var genderFilter = "all";
+  var stageFilters = new Set(); // empty = all
+  var dateStart = "";
+  var dateEnd = "";
+
+  window.initPlanner = function () {
+    if (initialized) return;
+    initialized = true;
+
+    var range = computeDateRange();
+
+    els.searchInput = document.getElementById("planner-sport-search");
+    els.selectedSports = document.getElementById("planner-selected-sports");
+    els.sportsGrid = document.getElementById("planner-sports-grid");
+    els.genderToggle = document.getElementById("planner-gender-toggle");
+    els.stageToggle = document.getElementById("planner-stage-toggle");
+    els.dateStart = document.getElementById("planner-date-start");
+    els.dateEnd = document.getElementById("planner-date-end");
+    els.summary = document.getElementById("planner-summary");
+    els.timeline = document.getElementById("planner-timeline");
+    els.results = document.getElementById("planner-results");
+    els.resetBtn = document.getElementById("planner-reset-btn");
+
+    // Set date defaults and bounds
+    els.dateStart.min = range.min;
+    els.dateStart.max = range.max;
+    els.dateStart.value = range.min;
+    els.dateEnd.min = range.min;
+    els.dateEnd.max = range.max;
+    els.dateEnd.value = range.max;
+    dateStart = range.min;
+    dateEnd = range.max;
+
+    // Events
+    els.searchInput.addEventListener("input", function () {
+      renderSportsGrid(els.searchInput.value);
+    });
+
+    els.dateStart.addEventListener("change", function () {
+      dateStart = this.value;
+      renderTimeline();
+    });
+    els.dateEnd.addEventListener("change", function () {
+      dateEnd = this.value;
+      renderTimeline();
+    });
+
+    // Gender toggle
+    els.genderToggle.addEventListener("click", function (e) {
+      var btn = e.target.closest(".gender-btn");
+      if (!btn) return;
+      genderFilter = btn.dataset.value;
+      els.genderToggle.querySelectorAll(".gender-btn").forEach(function (b) {
+        b.classList.toggle("active", b.dataset.value === genderFilter);
+      });
+      renderTimeline();
+    });
+
+    // Stage toggle (multi-select; "all" clears others, others clear "all")
+    els.stageToggle.addEventListener("click", function (e) {
+      var btn = e.target.closest(".stage-btn");
+      if (!btn) return;
+      var val = btn.dataset.value;
+      if (val === "all") {
+        stageFilters.clear();
+        els.stageToggle.querySelectorAll(".stage-btn").forEach(function (b) {
+          b.classList.toggle("active", b.dataset.value === "all");
+        });
+      } else {
+        // Toggle this stage
+        if (stageFilters.has(val)) {
+          stageFilters.delete(val);
+        } else {
+          stageFilters.add(val);
+        }
+        // If none selected, revert to "all"
+        if (stageFilters.size === 0) {
+          els.stageToggle.querySelectorAll(".stage-btn").forEach(function (b) {
+            b.classList.toggle("active", b.dataset.value === "all");
+          });
+        } else {
+          els.stageToggle.querySelectorAll(".stage-btn").forEach(function (b) {
+            if (b.dataset.value === "all") {
+              b.classList.remove("active");
+            } else {
+              b.classList.toggle("active", stageFilters.has(b.dataset.value));
+            }
+          });
+        }
+      }
+      renderTimeline();
+    });
+
+    // Reset
+    els.resetBtn.addEventListener("click", function () {
+      selectedSports = [];
+      genderFilter = "all";
+      stageFilters.clear();
+      dateStart = range.min;
+      dateEnd = range.max;
+      els.dateStart.value = range.min;
+      els.dateEnd.value = range.max;
+      els.searchInput.value = "";
+      els.genderToggle.querySelectorAll(".gender-btn").forEach(function (b) {
+        b.classList.toggle("active", b.dataset.value === "all");
+      });
+      els.stageToggle.querySelectorAll(".stage-btn").forEach(function (b) {
+        b.classList.toggle("active", b.dataset.value === "all");
+      });
+      renderSportsGrid("");
+      renderPills();
+      renderTimeline();
+    });
+
+    renderSportsGrid("");
+    renderTimeline();
+  };
+
+  // Expose togglePlannerSport globally for onclick
+  window.togglePlannerSport = function (sport) {
+    var idx = selectedSports.indexOf(sport);
+    if (idx >= 0) {
+      selectedSports.splice(idx, 1);
+    } else {
+      selectedSports.push(sport);
+    }
+    renderSportsGrid(els.searchInput.value);
+    renderPills();
+    renderTimeline();
+  };
+
+  function renderSportsGrid(filter) {
+    var lowerFilter = (filter || "").toLowerCase();
+    var html = SPORTS
+      .filter(function (s) { return !lowerFilter || s.toLowerCase().includes(lowerFilter); })
+      .map(function (sport) {
+        var sessions = SCHEDULE_DATA.filter(function (d) { return d.sport === sport; });
+        var isSelected = selectedSports.includes(sport);
+        var emoji = SPORT_EMOJI[sport] || "\u{1F3C5}";
+        return '<div class="sport-card ' + (isSelected ? "selected" : "") + '"'
+          + ' role="button" tabindex="0"'
+          + ' aria-pressed="' + isSelected + '"'
+          + " onclick=\"togglePlannerSport('" + sport.replace(/'/g, "\\'") + "')\""
+          + " onkeydown=\"if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePlannerSport('" + sport.replace(/'/g, "\\'") + "');}\">"
+          + '<span class="sport-emoji" aria-hidden="true">' + emoji + '</span>'
+          + '<div>'
+          + '<div class="sport-name">' + sport + '</div>'
+          + '<div class="sport-sessions">' + sessions.length + ' session' + (sessions.length !== 1 ? 's' : '') + '</div>'
+          + '</div></div>';
+      })
+      .join("");
+    els.sportsGrid.innerHTML = html || '<p style="color: var(--text-3); padding: 16px;">No sports match your search.</p>';
+  }
+
+  function renderPills() {
+    els.selectedSports.innerHTML = selectedSports
+      .map(function (sport) {
+        var emoji = SPORT_EMOJI[sport] || "\u{1F3C5}";
+        return '<span class="sport-pill">'
+          + emoji + ' ' + sport
+          + ' <button class="remove-pill" aria-label="Remove ' + sport + '"'
+          + " onclick=\"togglePlannerSport('" + sport.replace(/'/g, "\\'") + "')\">&times;</button>"
+          + '</span>';
+      })
+      .join("");
+  }
+
+  function getFilteredSessions() {
+    return SCHEDULE_DATA.filter(function (s) {
+      // Sport filter
+      if (selectedSports.length > 0 && !selectedSports.includes(s.sport)) return false;
+      // Gender filter
+      if (!sessionMatchesGender(s, genderFilter)) return false;
+      // Stage filter
+      if (stageFilters.size > 0 && !stageFilters.has(s.type)) return false;
+      // Date filter
+      if (dateStart && s.date < dateStart) return false;
+      if (dateEnd && s.date > dateEnd) return false;
+      return true;
+    });
+  }
+
+  function renderTimeline() {
+    var sessions = getFilteredSessions();
+
+    // Show/hide reset
+    var hasFilters = selectedSports.length > 0 || genderFilter !== "all" || stageFilters.size > 0;
+    els.resetBtn.style.display = hasFilters ? "" : "none";
+
+    // Summary
+    var summaryParts = [];
+    summaryParts.push(sessions.length + " session" + (sessions.length !== 1 ? "s" : ""));
+    if (selectedSports.length > 0) {
+      summaryParts.push(selectedSports.length + " sport" + (selectedSports.length !== 1 ? "s" : ""));
+    }
+    var uniqueDays = new Set(sessions.map(function (s) { return s.date; }));
+    summaryParts.push(uniqueDays.size + " day" + (uniqueDays.size !== 1 ? "s" : ""));
+    els.summary.textContent = summaryParts.join(" \u00B7 ");
+
+    if (sessions.length === 0) {
+      els.timeline.innerHTML = '<div class="no-results">'
+        + '<h3>No sessions match</h3>'
+        + '<p>Try adding more sports, broadening your date range, or selecting different stages.</p>'
+        + '</div>';
+      return;
+    }
+
+    // Group by date
+    var byDate = {};
+    sessions.forEach(function (s) {
+      if (!byDate[s.date]) byDate[s.date] = [];
+      byDate[s.date].push(s);
+    });
+
+    var sortedDates = Object.keys(byDate).sort();
+
+    els.timeline.innerHTML = sortedDates.map(function (date) {
+      var events = byDate[date].sort(function (a, b) {
+        return timeToMinutes(a.start) - timeToMinutes(b.start);
+      });
+
+      // Check for time conflicts
+      var conflicts = findConflicts(events);
+
+      return '<div class="timeline-day">'
+        + '<div class="timeline-day-label">' + formatDayLabel(date)
+        + ' <span class="day-count">' + events.length + ' session' + (events.length !== 1 ? 's' : '') + '</span>'
+        + '</div>'
+        + '<div class="timeline-events">'
+        + events.map(function (ev) { return renderTimelineEvent(ev, conflicts); }).join("")
+        + '</div></div>';
+    }).join("");
+  }
+
+  function findConflicts(events) {
+    var conflictSet = new Set();
+    for (var i = 0; i < events.length; i++) {
+      for (var j = i + 1; j < events.length; j++) {
+        var aStart = timeToMinutes(events[i].start);
+        var aEnd = timeToMinutes(events[i].end);
+        var bStart = timeToMinutes(events[j].start);
+        var bEnd = timeToMinutes(events[j].end);
+        if (aStart < bEnd && bStart < aEnd) {
+          conflictSet.add(events[i].code);
+          conflictSet.add(events[j].code);
+        }
+      }
+    }
+    return conflictSet;
+  }
+
+  function renderTimelineEvent(ev, conflicts) {
+    var emoji = SPORT_EMOJI[ev.sport] || "\u{1F3C5}";
+    var typeClass = ev.type.toLowerCase();
+    var hasConflict = conflicts.has(ev.code);
+    return '<div class="timeline-event type-' + typeClass + (hasConflict ? ' has-conflict' : '') + '">'
+      + '<div class="event-time">'
+      + '<span class="start">' + formatTime(ev.start) + '</span>'
+      + '<span class="dash">\u2013</span>'
+      + '<span class="end">' + formatTime(ev.end) + '</span>'
+      + '</div>'
+      + '<div class="event-details">'
+      + '<div class="event-sport">' + emoji + ' ' + ev.sport + '</div>'
+      + '<div class="event-desc">' + ev.desc + '</div>'
+      + '<div class="event-venue">' + ev.venue + ' \u00B7 ' + ev.zone + '</div>'
+      + '</div>'
+      + '<span class="event-badge badge-' + typeClass + '">' + ev.type + '</span>'
+      + (hasConflict ? '<span class="conflict-indicator" title="Overlaps with another session">Overlap</span>' : '')
+      + '</div>';
+  }
+})();
+
+// =============================================
+// NAVIGATION
+// =============================================
 function initNav() {
-  const tabs = document.querySelectorAll(".nav-tab");
-  const viewBrowse = document.getElementById("view-browse");
-  const viewPlanner = document.getElementById("view-planner");
+  var tabs = document.querySelectorAll(".nav-tab");
+  var viewBrowse = document.getElementById("view-browse");
+  var viewPlanner = document.getElementById("view-planner");
 
   function switchView(viewName) {
     if (viewName === "browse") {
       viewBrowse.style.display = "";
       viewPlanner.style.display = "none";
-      tabs.forEach(t => {
-        const isActive = t.dataset.view === "browse";
+      tabs.forEach(function (t) {
+        var isActive = t.dataset.view === "browse";
         t.classList.toggle("active", isActive);
         t.setAttribute("aria-selected", isActive);
       });
@@ -461,8 +374,8 @@ function initNav() {
     } else {
       viewBrowse.style.display = "none";
       viewPlanner.style.display = "";
-      tabs.forEach(t => {
-        const isActive = t.dataset.view === "planner";
+      tabs.forEach(function (t) {
+        var isActive = t.dataset.view === "planner";
         t.classList.toggle("active", isActive);
         t.setAttribute("aria-selected", isActive);
       });
@@ -471,28 +384,20 @@ function initNav() {
     window.scrollTo({ top: 0 });
   }
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", function(e) {
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function (e) {
       e.preventDefault();
-      const view = this.dataset.view;
+      var view = this.dataset.view;
       window.location.hash = view;
       switchView(view);
     });
   });
 
-  // Handle initial hash
   function handleHash() {
-    const hash = window.location.hash.replace("#", "");
-    if (hash === "planner") {
-      switchView("planner");
-    } else {
-      switchView("browse");
-    }
+    var hash = window.location.hash.replace("#", "");
+    switchView(hash === "planner" ? "planner" : "browse");
   }
 
   window.addEventListener("hashchange", handleHash);
   handleHash();
 }
-
-// Defer nav init until all scripts (including browse.js) have loaded.
-// Called from index.html after the last <script> tag.
