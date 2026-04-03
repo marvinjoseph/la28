@@ -94,11 +94,14 @@
 
   // ===== Dropdown builders =====
   function buildDropdown(container, items, filterSet, onToggle, constrainedSet) {
-    container.innerHTML = items.map(function (item) {
-      var checked = filterSet.has(item);
+    // Only show items that are available OR already checked
+    var visibleItems = items.filter(function (item) {
       var available = constrainedSet ? constrainedSet.has(item) : true;
-      var dimClass = (!available && !checked) ? " dimmed" : "";
-      return '<label class="filter-option' + dimClass + '" role="option" aria-selected="' + checked + '">' +
+      return available || filterSet.has(item);
+    });
+    container.innerHTML = visibleItems.map(function (item) {
+      var checked = filterSet.has(item);
+      return '<label class="filter-option" role="option" aria-selected="' + checked + '">' +
         '<input type="checkbox" ' + (checked ? "checked" : "") + ' value="' + escapeHtml(item) + '">' +
         '<span class="filter-option-label">' + escapeHtml(item) + '</span>' +
       '</label>';
