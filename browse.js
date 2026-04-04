@@ -370,6 +370,7 @@
   }
 
   function formatBrowseTime(t) {
+    if (!t || t === "TBD") return "TBD";
     var parts = t.split(":");
     var h = parts[0];
     var m = parts[1];

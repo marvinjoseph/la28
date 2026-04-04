@@ -59,6 +59,7 @@ function formatDayLabel(dateStr) {
 }
 
 function formatTime(t) {
+  if (!t || t === "TBD") return "TBD";
   var parts = t.split(":");
   var hour = parseInt(parts[0]);
   var m = parts[1];
@@ -68,6 +69,7 @@ function formatTime(t) {
 }
 
 function timeToMinutes(t) {
+  if (!t || t === "TBD") return Number.POSITIVE_INFINITY;
   var parts = t.split(":").map(Number);
   return parts[0] * 60 + parts[1];
 }
@@ -323,6 +325,9 @@ function timeToMinutes(t) {
         var aEnd = timeToMinutes(events[i].end);
         var bStart = timeToMinutes(events[j].start);
         var bEnd = timeToMinutes(events[j].end);
+        if (!isFinite(aStart) || !isFinite(aEnd) || !isFinite(bStart) || !isFinite(bEnd)) {
+          continue;
+        }
         if (aStart < bEnd && bStart < aEnd) {
           conflictSet.add(events[i].code);
           conflictSet.add(events[j].code);
