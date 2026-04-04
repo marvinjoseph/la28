@@ -39,12 +39,6 @@
       <section class="filter-bar" aria-label="Filters">
         <div class="filter-bar-top">
           <div class="filter-controls">
-            <!-- Search -->
-            <div class="filter-group filter-search">
-              <label for="browse-search" class="sr-only">Search events</label>
-              <input type="text" id="browse-search" placeholder="Search sport, event, venue..." autocomplete="off">
-            </div>
-
             <!-- Sport Filter -->
             <div class="filter-group">
               <button class="filter-trigger" id="filter-sport-trigger" aria-expanded="false" aria-controls="filter-sport-dropdown">
@@ -86,10 +80,6 @@
           </div>
 
           <div class="filter-meta">
-            <div class="filter-mode-toggle">
-              <button class="mode-btn active" id="mode-and" aria-pressed="true">Match all (AND)</button>
-              <button class="mode-btn" id="mode-or" aria-pressed="false">Match any (OR)</button>
-            </div>
             <div class="filter-status">
               <span class="result-count" id="result-count"></span>
               <button class="clear-filters-btn" id="clear-filters" style="display:none;">Clear all</button>

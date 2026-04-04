@@ -6,13 +6,11 @@
 
   // Filter state
   const filters = {
-    search: "",
     sports: new Set(),
     stages: new Set(),
     venues: new Set(),
     dateStart: "",
     dateEnd: "",
-    mode: "and" // "and" or "or"
   };
 
   let currentSort = { key: "date", dir: "asc" };
@@ -31,7 +29,6 @@
 
   function initBrowseDOM() {
     els = {
-      searchInput: document.getElementById("browse-search"),
       tbody: document.getElementById("browse-tbody"),
       resultCount: document.getElementById("result-count"),
       clearBtn: document.getElementById("clear-filters"),
@@ -48,8 +45,6 @@
       venueTrigger: document.getElementById("filter-venue-trigger"),
       venueDropdown: document.getElementById("filter-venue-dropdown"),
       venueCount: document.getElementById("filter-venue-count"),
-      modeAnd: document.getElementById("mode-and"),
-      modeOr: document.getElementById("mode-or"),
     };
   }
 
@@ -57,25 +52,18 @@
   // Returns the set of valid values for a given filter key,
   // considering ALL other active filters (but not the filter itself).
   function getConstrainedOptions(filterKey) {
-    var searchLower = filters.search.toLowerCase().trim();
     var hasSport = filterKey !== "sports" && filters.sports.size > 0;
     var hasStage = filterKey !== "stages" && filters.stages.size > 0;
     var hasVenue = filterKey !== "venues" && filters.venues.size > 0;
     var hasDateStart = filters.dateStart !== "";
     var hasDateEnd = filters.dateEnd !== "";
-    var hasSearch = searchLower !== "";
 
-    // Filter SCHEDULE_DATA by all OTHER active filters
     var subset = SCHEDULE_DATA.filter(function (s) {
       if (hasSport && !filters.sports.has(s.sport)) return false;
       if (hasStage && !filters.stages.has(s.type)) return false;
       if (hasVenue && !filters.venues.has(s.venue)) return false;
       if (hasDateStart && s.date < filters.dateStart) return false;
       if (hasDateEnd && s.date > filters.dateEnd) return false;
-      if (hasSearch) {
-        var haystack = (s.sport + " " + s.desc + " " + s.venue + " " + s.zone).toLowerCase();
-        if (!haystack.includes(searchLower)) return false;
-      }
       return true;
     });
 
@@ -93,13 +81,32 @@
   }
 
   // ===== Dropdown builders =====
-  function buildDropdown(container, items, filterSet, onToggle, constrainedSet) {
+  function buildDropdown(container, items, filterSet, onToggle, constrainedSet, searchable) {
     // Only show items that are available OR already checked
     var visibleItems = items.filter(function (item) {
       var available = constrainedSet ? constrainedSet.has(item) : true;
       return available || filterSet.has(item);
     });
-    container.innerHTML = visibleItems.map(function (item) {
+
+    // Track search state per dropdown
+    var searchTerm = container._dropdownSearch || "";
+
+    var searchHtml = "";
+    if (searchable) {
+      searchHtml = '<div class="dropdown-search-wrap">'
+        + '<input type="text" class="dropdown-search" placeholder="Search..." value="' + escapeHtml(searchTerm) + '" autocomplete="off">'
+        + '</div>';
+    }
+
+    var filteredItems = visibleItems;
+    if (searchable && searchTerm) {
+      var lower = searchTerm.toLowerCase();
+      filteredItems = visibleItems.filter(function (item) {
+        return item.toLowerCase().includes(lower);
+      });
+    }
+
+    var optionsHtml = filteredItems.map(function (item) {
       var checked = filterSet.has(item);
       return '<label class="filter-option" role="option" aria-selected="' + checked + '">' +
         '<input type="checkbox" ' + (checked ? "checked" : "") + ' value="' + escapeHtml(item) + '">' +
@@ -107,11 +114,31 @@
       '</label>';
     }).join("");
 
-    container.querySelectorAll("input[type=checkbox]").forEach(function (cb) {
+    container.innerHTML = searchHtml + '<div class="dropdown-options">' + optionsHtml + '</div>';
+
+    container.querySelectorAll(".dropdown-options input[type=checkbox]").forEach(function (cb) {
       cb.addEventListener("change", function () {
         onToggle(this.value, this.checked);
       });
     });
+
+    if (searchable) {
+      var searchInput = container.querySelector(".dropdown-search");
+      searchInput.addEventListener("input", function () {
+        container._dropdownSearch = this.value;
+        buildDropdown(container, items, filterSet, onToggle, constrainedSet, searchable);
+        // Refocus the search input after rebuild
+        var newInput = container.querySelector(".dropdown-search");
+        if (newInput) {
+          newInput.focus();
+          newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+        }
+      });
+      // Prevent dropdown from closing when clicking in search
+      searchInput.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
   }
 
   function setupDropdown(trigger, dropdown) {
@@ -211,46 +238,22 @@
 
   // ===== Filtering =====
   function getFilteredData() {
-    var searchLower = filters.search.toLowerCase().trim();
     var hasSport = filters.sports.size > 0;
     var hasStage = filters.stages.size > 0;
     var hasVenue = filters.venues.size > 0;
     var hasDateStart = filters.dateStart !== "";
     var hasDateEnd = filters.dateEnd !== "";
-    var hasSearch = searchLower !== "";
 
-    var hasAnyFilter = hasSport || hasStage || hasVenue || hasDateStart || hasDateEnd || hasSearch;
+    var hasAnyFilter = hasSport || hasStage || hasVenue || hasDateStart || hasDateEnd;
     if (!hasAnyFilter) return SCHEDULE_DATA.slice();
 
-    if (filters.mode === "and") {
-      return SCHEDULE_DATA.filter(function (s) {
-        if (hasSport && !filters.sports.has(s.sport)) return false;
-        if (hasStage && !filters.stages.has(s.type)) return false;
-        if (hasVenue && !filters.venues.has(s.venue)) return false;
-        if (hasDateStart && s.date < filters.dateStart) return false;
-        if (hasDateEnd && s.date > filters.dateEnd) return false;
-        if (hasSearch) {
-          var haystack = (s.sport + " " + s.desc + " " + s.venue + " " + s.zone).toLowerCase();
-          if (!haystack.includes(searchLower)) return false;
-        }
-        return true;
-      });
-    }
-
-    // OR mode: session matches if it passes ANY active filter group
     return SCHEDULE_DATA.filter(function (s) {
-      if (hasSport && filters.sports.has(s.sport)) return true;
-      if (hasStage && filters.stages.has(s.type)) return true;
-      if (hasVenue && filters.venues.has(s.venue)) return true;
-      if (hasDateStart || hasDateEnd) {
-        var inRange = (!hasDateStart || s.date >= filters.dateStart) && (!hasDateEnd || s.date <= filters.dateEnd);
-        if (inRange) return true;
-      }
-      if (hasSearch) {
-        var haystack = (s.sport + " " + s.desc + " " + s.venue + " " + s.zone).toLowerCase();
-        if (haystack.includes(searchLower)) return true;
-      }
-      return false;
+      if (hasSport && !filters.sports.has(s.sport)) return false;
+      if (hasStage && !filters.stages.has(s.type)) return false;
+      if (hasVenue && !filters.venues.has(s.venue)) return false;
+      if (hasDateStart && s.date < filters.dateStart) return false;
+      if (hasDateEnd && s.date > filters.dateEnd) return false;
+      return true;
     });
   }
 
@@ -294,8 +297,7 @@
     // Active filter count
     var activeCount = filters.sports.size + filters.stages.size + filters.venues.size +
       (filters.dateStart !== minDate ? (filters.dateStart ? 1 : 0) : 0) +
-      (filters.dateEnd !== maxDate ? (filters.dateEnd ? 1 : 0) : 0) +
-      (filters.search ? 1 : 0);
+      (filters.dateEnd !== maxDate ? (filters.dateEnd ? 1 : 0) : 0);
     els.clearBtn.style.display = activeCount > 0 ? "" : "none";
 
     // Compute constrained options for each dropdown
@@ -303,10 +305,10 @@
     var constrainedStages = getConstrainedOptions("stages");
     var constrainedVenues = getConstrainedOptions("venues");
 
-    // Rebuild dropdowns with constrained options (dims unavailable items)
-    buildDropdown(els.sportDropdown, SPORTS, filters.sports, toggleSportFilter, constrainedSports);
-    buildDropdown(els.stageDropdown, allStages, filters.stages, toggleStageFilter, constrainedStages);
-    buildDropdown(els.venueDropdown, allVenues, filters.venues, toggleVenueFilter, constrainedVenues);
+    // Rebuild dropdowns with constrained options
+    buildDropdown(els.sportDropdown, SPORTS, filters.sports, toggleSportFilter, constrainedSports, true);
+    buildDropdown(els.stageDropdown, allStages, filters.stages, toggleStageFilter, constrainedStages, false);
+    buildDropdown(els.venueDropdown, allVenues, filters.venues, toggleVenueFilter, constrainedVenues, true);
 
     // Render pills on trigger buttons
     renderTriggerPills(els.sportTrigger, "Sport", filters.sports, function (item) {
@@ -385,14 +387,16 @@
 
   // ===== Clear =====
   function clearAllFilters() {
-    filters.search = "";
     filters.sports.clear();
     filters.stages.clear();
     filters.venues.clear();
     filters.dateStart = minDate;
     filters.dateEnd = maxDate;
 
-    els.searchInput.value = "";
+    // Clear dropdown search states
+    els.sportDropdown._dropdownSearch = "";
+    els.venueDropdown._dropdownSearch = "";
+
     els.dateStart.value = minDate;
     els.dateEnd.value = maxDate;
 
@@ -429,9 +433,9 @@
     els.dateEnd.value = maxDate;
 
     // Build dropdowns (with initial constrained options — all available at start)
-    buildDropdown(els.sportDropdown, SPORTS, filters.sports, toggleSportFilter, null);
-    buildDropdown(els.stageDropdown, allStages, filters.stages, toggleStageFilter, null);
-    buildDropdown(els.venueDropdown, allVenues, filters.venues, toggleVenueFilter, null);
+    buildDropdown(els.sportDropdown, SPORTS, filters.sports, toggleSportFilter, null, true);
+    buildDropdown(els.stageDropdown, allStages, filters.stages, toggleStageFilter, null, false);
+    buildDropdown(els.venueDropdown, allVenues, filters.venues, toggleVenueFilter, null, true);
 
     // Setup dropdown open/close
     setupDropdown(els.sportTrigger, els.sportDropdown);
@@ -443,16 +447,6 @@
       closeAllDropdowns();
     });
 
-    // Search
-    var searchTimer;
-    els.searchInput.addEventListener("input", function () {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(function () {
-        filters.search = els.searchInput.value;
-        render();
-      }, 150);
-    });
-
     // Date range
     els.dateStart.addEventListener("change", function () {
       filters.dateStart = this.value;
@@ -460,24 +454,6 @@
     });
     els.dateEnd.addEventListener("change", function () {
       filters.dateEnd = this.value;
-      render();
-    });
-
-    // AND/OR mode
-    els.modeAnd.addEventListener("click", function () {
-      filters.mode = "and";
-      els.modeAnd.classList.add("active");
-      els.modeAnd.setAttribute("aria-pressed", "true");
-      els.modeOr.classList.remove("active");
-      els.modeOr.setAttribute("aria-pressed", "false");
-      render();
-    });
-    els.modeOr.addEventListener("click", function () {
-      filters.mode = "or";
-      els.modeOr.classList.add("active");
-      els.modeOr.setAttribute("aria-pressed", "true");
-      els.modeAnd.classList.remove("active");
-      els.modeAnd.setAttribute("aria-pressed", "false");
       render();
     });
 
