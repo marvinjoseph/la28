@@ -287,6 +287,31 @@ body {
   outline-offset: 0;
 }
 
+.planner-toggle-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.planner-toggle-checkbox input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.planner-toggle-checkbox:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
 .planner-summary {
   font-size: 0.82rem;
   color: var(--text-2);
@@ -890,6 +915,32 @@ body {
   line-height: 18px;
 }
 
+/* Filter Toggle */
+.filter-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.filter-toggle-label input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.filter-toggle-label:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
 /* Filter Trigger Pills */
 .filter-trigger-pills {
   display: inline-flex;
@@ -1159,6 +1210,7 @@ body {
 .browse-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1234,38 +1286,91 @@ body {
   background: var(--bg-warm);
 }
 
+.browse-cards {
+  display: none;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.browse-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.browse-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.browse-card-date {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.browse-card-time {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.browse-card-sport {
+  font-weight: 600;
+}
+
+.browse-card-desc {
+  color: var(--text);
+}
+
+.browse-card-venue {
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
+
 .col-date {
   white-space: nowrap;
+  width: 12%;
   min-width: 110px;
 }
 
 .col-time {
   white-space: nowrap;
-  min-width: 130px;
+  width: 16%;
+  min-width: 140px;
   font-variant-numeric: tabular-nums;
 }
 
 .col-sport {
+  width: 14%;
   white-space: nowrap;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .col-desc {
-  min-width: 160px;
+  width: 34%;
+  min-width: 200px;
   color: var(--text-2);
 }
 
 .col-stage {
+  width: 12%;
   white-space: nowrap;
 }
 
 .col-venue {
-  min-width: 120px;
-}
-
-.col-zone {
+  width: 22%;
+  min-width: 180px;
   white-space: nowrap;
-  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .browse-sport-emoji {
@@ -1412,8 +1517,16 @@ body {
     gap: 4px;
   }
 
-  .col-zone {
+  .browse-table-wrap {
     display: none;
+  }
+
+  .browse-cards {
+    display: flex;
+  }
+
+  .col-stage {
+    width: auto;
   }
 }
 

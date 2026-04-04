@@ -86,6 +86,14 @@
               <label for="browse-date-end" class="sr-only">End date</label>
               <input type="date" id="browse-date-end" min="2028-07-14" max="2028-07-30" aria-label="End date">
             </div>
+
+            <!-- TBD Toggle -->
+            <div class="filter-group filter-toggle">
+              <label class="filter-toggle-label" for="filter-hide-tbd">
+                <input type="checkbox" id="filter-hide-tbd" checked>
+                <span>Hide TBD</span>
+              </label>
+            </div>
           </div>
 
           <div class="filter-meta">
@@ -101,6 +109,14 @@
       <section class="browse-results" aria-label="Schedule results">
         <div class="browse-table-wrap">
           <table class="browse-table" id="browse-table">
+            <colgroup>
+              <col class="col-date">
+              <col class="col-time">
+              <col class="col-sport">
+              <col class="col-desc">
+              <col class="col-stage">
+              <col class="col-venue">
+            </colgroup>
             <thead>
               <tr>
                 <th class="col-date" scope="col">
@@ -119,12 +135,12 @@
                 <th class="col-venue" scope="col">
                   <button class="sort-btn" data-sort="venue" aria-label="Sort by venue">Venue</button>
                 </th>
-                <th class="col-zone" scope="col">Zone</th>
               </tr>
             </thead>
             <tbody id="browse-tbody"></tbody>
           </table>
         </div>
+        <div class="browse-cards" id="browse-cards" aria-live="polite"></div>
         <div class="browse-empty" id="browse-empty" style="display:none;">
           <h3>No sessions match your filters</h3>
           <p>Try adjusting your filters or clearing them to see all events.</p>
@@ -185,6 +201,14 @@
               <label for="planner-date-end" class="sr-only">End date</label>
               <input type="date" id="planner-date-end" aria-label="End date">
             </div>
+          </div>
+
+          <div class="planner-option-group">
+            <div class="planner-section-label">TBD</div>
+            <label class="planner-toggle-checkbox" for="planner-hide-tbd">
+              <input type="checkbox" id="planner-hide-tbd" checked>
+              <span>Hide TBD sessions</span>
+            </label>
           </div>
         </div>
 

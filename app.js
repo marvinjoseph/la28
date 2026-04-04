@@ -87,6 +87,7 @@ function timeToMinutes(t) {
   var stageFilters = new Set(); // empty = all
   var dateStart = "";
   var dateEnd = "";
+  var hideTbd = true;
 
   window.initPlanner = function () {
     if (initialized) return;
@@ -101,6 +102,7 @@ function timeToMinutes(t) {
     els.stageToggle = document.getElementById("planner-stage-toggle");
     els.dateStart = document.getElementById("planner-date-start");
     els.dateEnd = document.getElementById("planner-date-end");
+    els.hideTbd = document.getElementById("planner-hide-tbd");
     els.summary = document.getElementById("planner-summary");
     els.timeline = document.getElementById("planner-timeline");
     els.results = document.getElementById("planner-results");
@@ -129,6 +131,14 @@ function timeToMinutes(t) {
       dateEnd = this.value;
       renderTimeline();
     });
+
+    if (els.hideTbd) {
+      els.hideTbd.checked = hideTbd;
+      els.hideTbd.addEventListener("change", function () {
+        hideTbd = this.checked;
+        renderTimeline();
+      });
+    }
 
     // Gender toggle
     els.genderToggle.addEventListener("click", function (e) {
@@ -183,8 +193,10 @@ function timeToMinutes(t) {
       stageFilters.clear();
       dateStart = range.min;
       dateEnd = range.max;
+      hideTbd = true;
       els.dateStart.value = range.min;
       els.dateEnd.value = range.max;
+      if (els.hideTbd) els.hideTbd.checked = true;
       els.searchInput.value = "";
       els.genderToggle.querySelectorAll(".gender-btn").forEach(function (b) {
         b.classList.toggle("active", b.dataset.value === "all");
@@ -261,6 +273,7 @@ function timeToMinutes(t) {
       // Date filter
       if (dateStart && s.date < dateStart) return false;
       if (dateEnd && s.date > dateEnd) return false;
+      if (hideTbd && (s.start === "TBD" || s.end === "TBD")) return false;
       return true;
     });
   }

@@ -11,6 +11,7 @@
     venues: new Set(),
     dateStart: "",
     dateEnd: "",
+    hideTbd: true,
   };
 
   let currentSort = { key: "date", dir: "asc" };
@@ -34,6 +35,7 @@
       clearBtn: document.getElementById("clear-filters"),
       emptyState: document.getElementById("browse-empty"),
       table: document.getElementById("browse-table"),
+      cards: document.getElementById("browse-cards"),
       dateStart: document.getElementById("browse-date-start"),
       dateEnd: document.getElementById("browse-date-end"),
       sportTrigger: document.getElementById("filter-sport-trigger"),
@@ -45,6 +47,7 @@
       venueTrigger: document.getElementById("filter-venue-trigger"),
       venueDropdown: document.getElementById("filter-venue-dropdown"),
       venueCount: document.getElementById("filter-venue-count"),
+      hideTbd: document.getElementById("filter-hide-tbd"),
     };
   }
 
@@ -64,6 +67,7 @@
       if (hasVenue && !filters.venues.has(s.venue)) return false;
       if (hasDateStart && s.date < filters.dateStart) return false;
       if (hasDateEnd && s.date > filters.dateEnd) return false;
+      if (filters.hideTbd && (s.start === "TBD" || s.end === "TBD")) return false;
       return true;
     });
 
@@ -244,7 +248,7 @@
     var hasDateStart = filters.dateStart !== "";
     var hasDateEnd = filters.dateEnd !== "";
 
-    var hasAnyFilter = hasSport || hasStage || hasVenue || hasDateStart || hasDateEnd;
+    var hasAnyFilter = hasSport || hasStage || hasVenue || hasDateStart || hasDateEnd || filters.hideTbd;
     if (!hasAnyFilter) return SCHEDULE_DATA.slice();
 
     return SCHEDULE_DATA.filter(function (s) {
@@ -253,6 +257,7 @@
       if (hasVenue && !filters.venues.has(s.venue)) return false;
       if (hasDateStart && s.date < filters.dateStart) return false;
       if (hasDateEnd && s.date > filters.dateEnd) return false;
+      if (filters.hideTbd && (s.start === "TBD" || s.end === "TBD")) return false;
       return true;
     });
   }
@@ -327,11 +332,13 @@
     // Empty state
     if (sorted.length === 0) {
       els.table.style.display = "none";
+      if (els.cards) els.cards.style.display = "none";
       els.emptyState.style.display = "";
       return;
     }
     els.table.style.display = "";
     els.emptyState.style.display = "none";
+    if (els.cards) els.cards.style.display = "";
 
     // Build rows
     els.tbody.innerHTML = sorted.map(function (s) {
@@ -340,13 +347,30 @@
       return '<tr>' +
         '<td class="col-date">' + formatBrowseDate(s.date) + '</td>' +
         '<td class="col-time">' + formatBrowseTime(s.start) + ' &ndash; ' + formatBrowseTime(s.end) + '</td>' +
-        '<td class="col-sport"><span class="browse-sport-emoji" aria-hidden="true">' + emoji + '</span> ' + escapeHtml(s.sport) + '</td>' +
-        '<td class="col-desc">' + escapeHtml(s.desc) + '</td>' +
+        '<td class="col-sport" title="' + escapeHtml(s.sport) + '"><span class="browse-sport-emoji" aria-hidden="true">' + emoji + '</span> ' + escapeHtml(s.sport) + '</td>' +
+        '<td class="col-desc" title="' + escapeHtml(s.desc) + '">' + escapeHtml(s.desc) + '</td>' +
         '<td class="col-stage"><span class="browse-badge badge-' + typeClass + '">' + s.type + '</span></td>' +
-        '<td class="col-venue">' + escapeHtml(s.venue) + '</td>' +
-        '<td class="col-zone">' + escapeHtml(s.zone) + '</td>' +
+        '<td class="col-venue" title="' + escapeHtml(s.venue) + '">' + escapeHtml(s.venue) + '</td>' +
       '</tr>';
     }).join("");
+
+    // Build mobile cards
+    if (els.cards) {
+      els.cards.innerHTML = sorted.map(function (s) {
+        var emoji = SPORT_EMOJI[s.sport] || "\u{1F3C5}";
+        var typeClass = s.type.toLowerCase();
+        return '<div class="browse-card">' +
+          '<div class="browse-card-top">' +
+            '<div class="browse-card-date">' + formatBrowseDate(s.date) + '</div>' +
+            '<div class="browse-card-time">' + formatBrowseTime(s.start) + ' \u2013 ' + formatBrowseTime(s.end) + '</div>' +
+            '<span class="browse-badge badge-' + typeClass + '">' + s.type + '</span>' +
+          '</div>' +
+          '<div class="browse-card-sport"><span class="browse-sport-emoji" aria-hidden="true">' + emoji + '</span> ' + escapeHtml(s.sport) + '</div>' +
+          '<div class="browse-card-desc">' + escapeHtml(s.desc) + '</div>' +
+          '<div class="browse-card-venue">' + escapeHtml(s.venue) + '</div>' +
+        '</div>';
+      }).join("");
+    }
 
     // Update sort arrows
     document.querySelectorAll(".sort-btn").forEach(function (btn) {
@@ -393,6 +417,7 @@
     filters.venues.clear();
     filters.dateStart = minDate;
     filters.dateEnd = maxDate;
+    filters.hideTbd = true;
 
     // Clear dropdown search states
     els.sportDropdown._dropdownSearch = "";
@@ -400,6 +425,7 @@
 
     els.dateStart.value = minDate;
     els.dateEnd.value = maxDate;
+    if (els.hideTbd) els.hideTbd.checked = true;
 
     render();
   }
@@ -457,6 +483,15 @@
       filters.dateEnd = this.value;
       render();
     });
+
+    // TBD toggle
+    if (els.hideTbd) {
+      els.hideTbd.checked = filters.hideTbd;
+      els.hideTbd.addEventListener("change", function () {
+        filters.hideTbd = this.checked;
+        render();
+      });
+    }
 
     // Clear all
     els.clearBtn.addEventListener("click", clearAllFilters);
