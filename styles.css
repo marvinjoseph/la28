@@ -1347,15 +1347,13 @@ body {
 }
 
 .col-sport {
-  width: 14%;
-  white-space: nowrap;
+  width: 20%;
+  white-space: normal;
   font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .col-desc {
-  width: 34%;
+  width: 28%;
   min-width: 200px;
   color: var(--text-2);
 }
@@ -1366,7 +1364,7 @@ body {
 }
 
 .col-venue {
-  width: 22%;
+  width: 20%;
   min-width: 180px;
   white-space: nowrap;
   overflow: hidden;
