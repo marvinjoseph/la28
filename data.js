@@ -535,36 +535,12 @@ const SCHEDULE_DATA = [
   { sport: "Boxing - Preliminary Stages", venue: "Peacock Theater", zone: "DTLA", code: "BOX13", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's 57kg Round of 16 / Women's 75kg Round of 16 / Men's 55kg Quarterfinal / Men's 80kg Quarterfinal", start: "12:00", end: "15:00" },
   { sport: "Boxing - Preliminary Stages", venue: "Peacock Theater", zone: "DTLA", code: "BOX14", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's 57kg Round of 16 / Women's 75kg Round of 16 / Men's 55kg Quarterfinal / Men's 80kg Quarterfinal", start: "19:00", end: "22:00" },
   { sport: "Boxing - Preliminary Stages", venue: "Peacock Theater", zone: "DTLA", code: "BOX17", date: "2028-07-23", day: 9, type: "Semifinal", desc: "Women's 57kg Quarterfinal / Women's 75kg Quarterfinal / Men's 55kg Semifinal", start: "12:00", end: "14:30" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL03", date: "2028-07-16", day: 2, type: "Final", desc: "Men's Kayak Single Semifinal / Men's Kayak Single Final", start: "9:00
-  OKC Local
-  Time (CT)", end: "12:10
-  OKC Local
-  Time (CT)" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL04", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Men's Canoe Single Heats - 1st and 2nd Run / Women's Canoe Single Heats - 1st and 2nd Run", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:35
-  OKC Local
-  Time (CT)" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL05", date: "2028-07-18", day: 4, type: "Final", desc: "Women's Canoe Single Semifinal / Women's Canoe Single Final", start: "9:00
-  OKC Local
-  Time (CT)", end: "12:10
-  OKC Local
-  Time (CT)" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL06", date: "2028-07-19", day: 5, type: "Final", desc: "Men's Canoe Single Semifinal / Men's Canoe Single Final", start: "9:00
-  OKC Local
-  Time (CT)", end: "12:10
-  OKC Local
-  Time (CT)" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL07", date: "2028-07-20", day: 6, type: "Preliminary", desc: "Women's Kayak Cross Round 1 / Men's Kayak Cross Round 1 / Women's Kayak Cross Repechage / Men's Kayak Cross Repechage", start: "9:00
-  OKC Local
-  Time (CT)", end: "12:05
-  OKC Local
-  Time (CT)" },
-  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL08", date: "2028-07-21", day: 7, type: "Preliminary", desc: "Men's Kayak Cross Heats / Women's Kayak Cross Heats", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:00
-  OKC Local
-  Time (CT)" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL03", date: "2028-07-16", day: 2, type: "Final", desc: "Men's Kayak Single Semifinal / Men's Kayak Single Final", start: "9:00", end: "12:10" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL04", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Men's Canoe Single Heats - 1st and 2nd Run / Women's Canoe Single Heats - 1st and 2nd Run", start: "9:00", end: "11:35" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL05", date: "2028-07-18", day: 4, type: "Final", desc: "Women's Canoe Single Semifinal / Women's Canoe Single Final", start: "9:00", end: "12:10" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL06", date: "2028-07-19", day: 5, type: "Final", desc: "Men's Canoe Single Semifinal / Men's Canoe Single Final", start: "9:00", end: "12:10" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL07", date: "2028-07-20", day: 6, type: "Preliminary", desc: "Women's Kayak Cross Round 1 / Men's Kayak Cross Round 1 / Women's Kayak Cross Repechage / Men's Kayak Cross Repechage", start: "9:00", end: "12:05" },
+  { sport: "Canoe Slalom", venue: "OKC Whitewater Center", zone: "OKC", code: "CSL08", date: "2028-07-21", day: 7, type: "Preliminary", desc: "Men's Kayak Cross Heats / Women's Kayak Cross Heats", start: "9:00", end: "11:00" },
   { sport: "Climbing", venue: "Long Beach Climbing Theater", zone: "Long Beach", code: "CLB04", date: "2028-07-25", day: 11, type: "Semifinal", desc: "Men's Lead Semifinal", start: "18:45", end: "20:00" },
   { sport: "Climbing", venue: "Long Beach Climbing Theater", zone: "Long Beach", code: "CLB06", date: "2028-07-26", day: 12, type: "Semifinal", desc: "Women's Lead Semifinal", start: "18:45", end: "20:00" },
   { sport: "Cricket", venue: "Fairgrounds Cricket Stadium", zone: "Pomona", code: "CKT02", date: "2028-07-12", day: -2, type: "Preliminary", desc: "Women's Group Stage First Round", start: "18:00", end: "21:30" },
@@ -615,8 +591,8 @@ const SCHEDULE_DATA = [
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN06", date: "2028-07-17", day: 3, type: "Final", desc: "Women's Sabre Individual Semifinal / Men's Foil Individual Semifinal / Women's Sabre Individual Bronze Medal Bout / Men's Foil Individual Bronze Medal Bout / Women's Sabre Individual Gold Medal Bout / Men's Foil Individual Gold Medal Bout", start: "18:30", end: "22:40" },
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN09", date: "2028-07-19", day: 5, type: "Semifinal", desc: "Men's Sabre Team Table of 8 / Men's Sabre Team Classification 5-8 / Men's Sabre Team Semifinal / Men's Sabre Team Placement 7-8 / Men's Sabre Team Placement 5-6", start: "9:00", end: "14:30" },
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN10", date: "2028-07-19", day: 5, type: "Final", desc: "Men's Sabre Team Bronze Medal Match / Men's Sabre Team Gold Medal Match", start: "17:30", end: "19:40" },
-  { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN11", date: "2028-07-20", day: 6, type: "Semifinal", desc: "Men's Épée Team Table of 8 / Men's Épée Team Classification 5-8 / Men's Épée Team Semifinal / Men's Épée Team Placement 7-8 / Men's Épée Team Placement 5-6", start: "9:00", end: "16:10" },
-  { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN12", date: "2028-07-20", day: 6, type: "Final", desc: "Men's Épée Team Bronze Medal Match / Men's Épée Team Gold Medal Match", start: "18:30", end: "21:40" },
+  { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN11", date: "2028-07-20", day: 6, type: "Semifinal", desc: "Men's Epee Team Table of 8 / Men's Epee Team Classification 5-8 / Men's Epee Team Semifinal / Men's Epee Team Placement 7-8 / Men's Epee Team Placement 5-6", start: "9:00", end: "16:10" },
+  { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN12", date: "2028-07-20", day: 6, type: "Final", desc: "Men's Epee Team Bronze Medal Match / Men's Epee Team Gold Medal Match", start: "18:30", end: "21:40" },
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN13", date: "2028-07-21", day: 7, type: "Semifinal", desc: "Women's Foil Team Table of 8 / Women's Foil Team Classification 5-8 / Women's Foil Team Semifinal / Women's Foil Team Placement 7-8 / Women's Foil Team Placement 5-6", start: "9:00", end: "14:30" },
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN14", date: "2028-07-21", day: 7, type: "Final", desc: "Women's Foil Team Bronze Medal Match / Women's Foil Team Gold Medal Match", start: "18:30", end: "21:20" },
   { sport: "Fencing", venue: "LA Convention Center Hall 1", zone: "DTLA", code: "FEN15", date: "2028-07-22", day: 8, type: "Semifinal", desc: "Men's Foil Team Table of 8 / Men's Foil Team Classification 5-8 / Men's Foil Team Semifinal / Men's Foil Team Placement 7-8 / Men's Foil Team Placement 5-6", start: "9:00", end: "14:30" },
@@ -643,8 +619,8 @@ const SCHEDULE_DATA = [
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL10", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL11", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL12", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL13", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL14", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL13", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL14", date: "2028-07-11", day: -3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL15", date: "2028-07-13", day: -1, type: "Preliminary", desc: "Men's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL16", date: "2028-07-13", day: -1, type: "Preliminary", desc: "Men's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "Columbus Stadium", zone: "Columbus", code: "FBL17", date: "2028-07-13", day: -1, type: "Preliminary", desc: "Men's Group Stage", start: "TBD", end: "TBD" },
@@ -655,8 +631,8 @@ const SCHEDULE_DATA = [
   { sport: "Football (Soccer)", venue: "St. Louis Stadium", zone: "St. Louis", code: "FBL22", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "Columbus Stadium", zone: "Columbus", code: "FBL23", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL24", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL25", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL26", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL25", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL26", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL27", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL28", date: "2028-07-14", day: 0, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL29", date: "2028-07-16", day: 2, type: "Preliminary", desc: "Men's Group Stage", start: "TBD", end: "TBD" },
@@ -669,8 +645,8 @@ const SCHEDULE_DATA = [
   { sport: "Football (Soccer)", venue: "Nashville Stadium", zone: "Nashville", code: "FBL36", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "Nashville Stadium", zone: "Nashville", code: "FBL37", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "New York Stadium", zone: "New York", code: "FBL38", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL39", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL40", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL39", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL40", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL41", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL42", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Women's Group Stage", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "Columbus Stadium", zone: "Columbus", code: "FBL43", date: "2028-07-20", day: 6, type: "Quarterfinal", desc: "Men's Quarterfinal", start: "TBD", end: "TBD" },
@@ -680,7 +656,7 @@ const SCHEDULE_DATA = [
   { sport: "Football (Soccer)", venue: "Rose Bowl Stadium", zone: "Pasadena", code: "FBL47", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's Quarterfinal", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "Nashville Stadium", zone: "Nashville", code: "FBL48", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's Quarterfinal", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL49", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's Quarterfinal", start: "TBD", end: "TBD" },
-  { sport: "Football (Soccer)", venue: "San José Stadium", zone: "San José", code: "FBL50", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's Quarterfinal", start: "TBD", end: "TBD" },
+  { sport: "Football (Soccer)", venue: "San Jose Stadium", zone: "San Jose", code: "FBL50", date: "2028-07-21", day: 7, type: "Quarterfinal", desc: "Women's Quarterfinal", start: "TBD", end: "TBD" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL51", date: "2028-07-24", day: 10, type: "Semifinal", desc: "Men's Semifinal", start: "13:00", end: "16:00" },
   { sport: "Football (Soccer)", venue: "San Diego Stadium", zone: "San Diego", code: "FBL53", date: "2028-07-25", day: 11, type: "Semifinal", desc: "Women's Semifinal", start: "17:30", end: "20:30" },
   { sport: "Golf", venue: "Riviera Country Club", zone: "Riviera", code: "GLF02", date: "2028-07-20", day: 6, type: "Preliminary", desc: "Men's Individual Stroke Play Round 2", start: "9:00", end: "18:00" },
@@ -807,91 +783,23 @@ const SCHEDULE_DATA = [
   { sport: "Shooting (Rifle & Pistol)", venue: "Long Beach Target Shooting Hall", zone: "Long Beach", code: "SHO11", date: "2028-07-23", day: 9, type: "Final", desc: "Men's 25m Rapid Fire Pistol Stage 2 / Women's 25m Pistol Qualification Rapid Fire Stage / Men's 25m Rapid Fire Pistol Final / Women's 25m Pistol Final", start: "9:30", end: "21:00" },
   { sport: "Shooting (Shotgun)", venue: "Whittier Narrows Clay Shooting Center", zone: "Whittier Narrows", code: "SHO08", date: "2028-07-21", day: 7, type: "Preliminary", desc: "Women's Trap Qualification - Day 1 / Men's Trap Qualification - Day 1", start: "9:30", end: "14:30" },
   { sport: "Shooting (Shotgun)", venue: "Whittier Narrows Clay Shooting Center", zone: "Whittier Narrows", code: "SHO10", date: "2028-07-22", day: 8, type: "Final", desc: "Women's Trap Qualification - Day 2 / Men's Trap Qualification - Day 2 / Women's Trap Final / Men's Trap Final", start: "9:30", end: "17:15" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB13", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB14", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00
-  OKC Local
-  Time (CT)", end: "18:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB15", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30
-  OKC Local
-  Time (CT)", end: "23:00
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB16", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB17", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00
-  OKC Local
-  Time (CT)", end: "18:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB18", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30
-  OKC Local
-  Time (CT)", end: "23:00
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB19", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB20", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00
-  OKC Local
-  Time (CT)", end: "18:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB21", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30
-  OKC Local
-  Time (CT)", end: "23:00
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB22", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB23", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00
-  OKC Local
-  Time (CT)", end: "18:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB24", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30
-  OKC Local
-  Time (CT)", end: "23:00
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB25", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB26", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00
-  OKC Local
-  Time (CT)", end: "18:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB27", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30
-  OKC Local
-  Time (CT)", end: "23:00
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB28", date: "2028-07-28", day: 14, type: "Final", desc: "Women's Bronze Medal Game", start: "19:00
-  OKC Local
-  Time (CT)", end: "21:30
-  OKC Local
-  Time (CT)" },
-  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB29", date: "2028-07-29", day: 15, type: "Final", desc: "Women's Gold Medal Game", start: "9:00
-  OKC Local
-  Time (CT)", end: "11:45
-  OKC Local
-  Time (CT)" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB13", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00", end: "11:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB14", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00", end: "18:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB15", date: "2028-07-23", day: 9, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30", end: "23:00" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB16", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00", end: "11:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB17", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00", end: "18:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB18", date: "2028-07-24", day: 10, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30", end: "23:00" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB19", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00", end: "11:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB20", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00", end: "18:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB21", date: "2028-07-25", day: 11, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30", end: "23:00" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB22", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00", end: "11:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB23", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00", end: "18:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB24", date: "2028-07-26", day: 12, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30", end: "23:00" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB25", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "9:00", end: "11:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB26", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "16:00", end: "18:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB27", date: "2028-07-27", day: 13, type: "Preliminary", desc: "Women's Preliminary Round", start: "20:30", end: "23:00" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB28", date: "2028-07-28", day: 14, type: "Final", desc: "Women's Bronze Medal Game", start: "19:00", end: "21:30" },
+  { sport: "Softball", venue: "OKC Softball Park", zone: "OKC", code: "BSB29", date: "2028-07-29", day: 15, type: "Final", desc: "Women's Gold Medal Game", start: "9:00", end: "11:45" },
   { sport: "Squash", venue: "Comcast Squash Center at Universal Studios", zone: "Universal City", code: "SQU02", date: "2028-07-16", day: 2, type: "Preliminary", desc: "Men's and Women's Round of 16 (4 Matches)", start: "19:30", end: "23:15" },
   { sport: "Squash", venue: "Comcast Squash Center at Universal Studios", zone: "Universal City", code: "SQU03", date: "2028-07-17", day: 3, type: "Preliminary", desc: "Men's and Women's Round of 16 (4 Matches)", start: "19:30", end: "23:15" },
   { sport: "Squash", venue: "Comcast Squash Center at Universal Studios", zone: "Universal City", code: "SQU04", date: "2028-07-18", day: 4, type: "Preliminary", desc: "Men's and Women's Round of 16 (4 Matches)", start: "19:30", end: "23:15" },
